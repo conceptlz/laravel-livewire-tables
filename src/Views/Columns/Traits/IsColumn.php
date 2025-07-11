@@ -29,7 +29,8 @@ trait IsColumn
         HasLabelAttributes,
         HasSecondaryHeader,
         HasTheme,
-        HasVisibility;
+        HasVisibility,
+        HasExportable;
 
     // What displays in the columns header
     protected string $title;

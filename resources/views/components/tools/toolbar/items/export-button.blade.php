@@ -1,0 +1,5 @@
+<div>
+    <button wire:click="export" type="button" class="rounded-md bg-white border-2 border-gray-300/70 px-3.5 py-1.5 2xl:py-2.5 text-sm font-semibold text-gray-400 shadow-sm hover:text-gray-900 hover:border-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 inline-flex items-center gap-x-1.5 disabled:bg-gray-100 disabled:text-gray-300 disabled:hover:border-gray-300/70">
+        <svg class="h-5 w-5" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><line x1="128" y1="152" x2="128" y2="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M216,152v56a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><polyline points="168 112 128 152 88 112" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/></svg>
+    </button>
+</div>

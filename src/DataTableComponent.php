@@ -18,7 +18,6 @@ abstract class DataTableComponent extends Component
     public function boot(): void
     {
         //
-        dd('ters');
     }
 
     /**

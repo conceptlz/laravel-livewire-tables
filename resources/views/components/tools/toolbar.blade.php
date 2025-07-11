@@ -71,6 +71,10 @@
         @if ($this->columnSelectIsEnabled)
             <x-livewire-tables::tools.toolbar.items.column-select />
         @endif
+        
+        @if ($this->hasExportable())
+            <x-livewire-tables::tools.toolbar.items.export-button />
+        @endif
 
         @if ($this->showPaginationDropdown())
             <x-livewire-tables::tools.toolbar.items.pagination-dropdown />

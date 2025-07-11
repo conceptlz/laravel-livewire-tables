@@ -36,5 +36,6 @@ trait HasAllTraits
         WithSecondaryHeader,
         WithSessionStorage,
         WithTableAttributes,
-        WithTools;
+        WithTools,
+        WithExport;
 }
