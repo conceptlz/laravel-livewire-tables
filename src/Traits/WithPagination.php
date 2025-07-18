@@ -23,7 +23,7 @@ trait WithPagination
     public int $defaultPerPage = 10;
 
     #[Locked]
-    public array $perPageAccepted = [10, 25, 50];
+    public array $perPageAccepted = [10, 25, 50,100,200,-1];
 
     #[Locked]
     public string $paginationTheme = 'tailwind';

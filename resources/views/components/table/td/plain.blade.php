@@ -1,12 +1,12 @@
 @aware([ 'rowIndex', 'rowID','isTailwind','isBootstrap'])
-@props(['column' => null, 'customAttributes' => [], 'displayMinimisedOnReorder' => false, 'hideUntilReorder' => false])
+@props(['column' => null, 'customAttributes' => [], 'displayMinimisedOnReorder' => false, 'hideUntilReorder' => false, 'is_bulkaction_td' => false])
 
 
 @if ($isTailwind)
     <td x-cloak {{ $attributes
         ->merge($customAttributes)
         ->class([
-            'px-6 py-4 whitespace-nowrap text-sm font-medium dark:text-white' => $customAttributes['default'] ?? true,
+            'whitespace-nowrap min-w-min' => $customAttributes['default'] ?? true,
             'hidden' => $column && $column->shouldCollapseAlways(),
             'hidden md:table-cell' => $column && $column->shouldCollapseOnMobile(),
             'hidden lg:table-cell' => $column && $column->shouldCollapseOnTablet(),

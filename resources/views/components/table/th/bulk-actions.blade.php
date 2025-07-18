@@ -7,19 +7,19 @@
 @if ($this->bulkActionsAreEnabled() && $this->hasBulkActions())
     <x-livewire-tables::table.th.plain  :displayMinimisedOnReorder="true" wire:key="{{ $tableName }}-thead-bulk-actions" :$customAttributes>
         <div
-            x-data="{newSelectCount: 0, indeterminateCheckbox: false, bulkActionHeaderChecked: false}"
+            x-data="{newSelectCount: 0, indeterminateCheckbox: false, bulkActionHeaderChecked: false, allSelected : false}"
             x-init="$watch('selectedItems', value => indeterminateCheckbox = (value.length > 0 && value.length < paginationTotalItemCount))"
             x-cloak x-show="currentlyReorderingStatus !== true"
             @class([
-                'inline-flex rounded-md shadow-sm' => $isTailwind,
+                '' => $isTailwind,
                 'form-check' => $isBootstrap,
             ])
         >
-            <input
-                x-init="$watch('indeterminateCheckbox', value => $el.indeterminate = value); $watch('selectedItems', value => newSelectCount = value.length);"
+            <flux:checkbox
+                x-init="$watch('indeterminateCheckbox', value => $el.indeterminate = value); $watch('selectedItems', function(value){ newSelectCount = value.length; allSelected = selectedItems.length == paginationTotalItemCount});"
                 x-on:click="if(selectedItems.length == paginationTotalItemCount) { $el.indeterminate = false; $wire.clearSelected(); bulkActionHeaderChecked = false; } else { bulkActionHeaderChecked = true; $el.indeterminate = false; $wire.setAllSelected(); }"
                 type="checkbox"
-                :checked="selectedItems.length == paginationTotalItemCount"
+                x-model="allSelected"
                 {{
                     $attributes->merge($bulkActionsThCheckboxAttributes)->class([
                         'border-gray-300 text-indigo-600 focus:border-indigo-300 focus:ring-indigo-200 dark:bg-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:bg-gray-600' => $isTailwind && (($bulkActionsThCheckboxAttributes['default'] ?? true) || ($bulkActionsThCheckboxAttributes['default-colors'] ?? true)),

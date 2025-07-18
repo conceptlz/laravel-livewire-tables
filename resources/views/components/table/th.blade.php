@@ -1,4 +1,4 @@
-@aware(['isTailwind','isBootstrap'])
+@aware(['isTailwind','isBootstrap','columnCount','tableName'])
 @props(['column', 'index'])
 
 @php
@@ -8,13 +8,14 @@
     $customLabelAttributes = $allThAttributes['labelAttributes'];
     $customIconAttributes = $this->getThSortIconAttributes($column);
     $direction = $column->hasField() ? $this->getSort($column->getColumnSelectName()) : $this->getSort($column->getSlug()) ?? null;
+    $th_class = ($columnCount == $index) ? 'relative py-4 pl-3 pr-6 bg-zinc-100 shadow-[inset_1px_-1px_rgba(0,0,0,0.1)] shadow-zinc-200 min-w-min w-full' : 'text-left whitespace-nowrap';
+
 @endphp
 
 <th {{
     $attributes->merge($customThAttributes)
         ->class([
-            'text-gray-500 dark:bg-gray-800 dark:text-gray-400' => $isTailwind && (($customThAttributes['default-colors'] ?? true) || ($customThAttributes['default'] ?? true)),
-            'px-6 py-3 text-left text-xs font-medium whitespace-nowrap uppercase tracking-wider' => $isTailwind && (($customThAttributes['default-styling'] ?? true) || ($customThAttributes['default'] ?? true)),
+            $th_class => $isTailwind,
             'hidden' => $isTailwind && $column->shouldCollapseAlways(),
             'hidden md:table-cell' => $isTailwind && $column->shouldCollapseOnMobile(),
             'hidden lg:table-cell' => $isTailwind && $column->shouldCollapseOnTablet(),
@@ -30,18 +31,33 @@
             <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
         @else
             @if ($isTailwind)
-
-                <button wire:click="sortBy('{{ $column->getColumnSortKey() }}')" {{
-                        $attributes->merge($customSortButtonAttributes)
-                            ->class([
-                                'text-gray-500 dark:text-gray-400' => (($customSortButtonAttributes['default-colors'] ?? true) || ($customSortButtonAttributes['default'] ?? true)),
-                                'flex items-center space-x-1 text-left text-xs leading-4 font-medium uppercase tracking-wider group focus:outline-none' => (($customSortButtonAttributes['default-styling'] ?? true) || ($customSortButtonAttributes['default'] ?? true)),
-                            ])
-                            ->except(['default', 'default-colors', 'default-styling', 'wire:key'])
-                }}>
-                    <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
-                    <x-livewire-tables::table.th.sort-icons :$direction :$customIconAttributes />
-                </button>
+                <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
+                <div class="ms-2 inline-flex items-center justify-end space-x-0.5" {{ $attributes->merge($customSortButtonAttributes) }}>
+                    @if($this->sortingIsEnabled() && ($column->isSortable() || $column->getSortCallback()))
+                        <flux:button variant="subtle" size="xs"  wire:click="sortBy('{{ $column->getColumnSortKey() }}')">
+                            <x-phosphor-caret-up-down class="size-3" />
+                        </flux:button>
+                    @endif
+                    @if($this->filtersAreEnabled() &&
+                            $this->filtersVisibilityIsEnabled() &&
+                            $this->hasVisibleFilters() && ($column->hasSecondaryHeader() && $column->hasSecondaryHeaderCallback()))
+                        <flux:dropdown position="bottom" align="center" wire:key="{{ $tableName .'-'. $column->getSlug() .'dropdown-'. $index }}">
+                            <flux:button variant="subtle" size="xs" wire:key="{{ $tableName .'-'. $column->getSlug() .'filterbutton-'. $index }}" >
+                                <x-phosphor-funnel class="size-3" />
+                            </flux:button>
+                             <flux:popover class="min-w-60 flex flex-col gap-4 shadow-xl">
+                                   @if( $column->secondaryHeaderCallbackIsFilter())
+                                        {{ $column->getSecondaryHeaderFilter($column->getSecondaryHeaderCallback(), $this->getFilterGenericData) }}    
+                                    @elseif($column->secondaryHeaderCallbackIsString())
+                                        {{ $column->getSecondaryHeaderFilter($this->getFilterByKey($column->getSecondaryHeaderCallback()), $this->getFilterGenericData) }}
+                                    @else
+                                        {{ $column->getNewSecondaryHeaderContents($this->getRows) }}
+                                    @endif
+                             </flux:popover>
+                        </flux:dropdown>
+                    @endif
+                </div>
+                
             @elseif ($isBootstrap)
                 <div wire:click="sortBy('{{ $column->getColumnSortKey() }}')" {{
                         $attributes->merge($customSortButtonAttributes)

@@ -1,8 +1,10 @@
-@aware([ 'row', 'rowIndex', 'tableName', 'primaryKey','isTailwind','isBootstrap'])
+@aware([ 'row', 'rowIndex', 'tableName', 'primaryKey','isTailwind','isBootstrap','columnCount'])
 @props(['column', 'colIndex'])
 
 @php
-    $customAttributes = $this->getTdAttributes($column, $row, $colIndex, $rowIndex)
+    $customAttributes = $this->getTdAttributes($column, $row, $colIndex, $rowIndex);
+    $td_class = ($columnCount == $colIndex) ? ' ps-4 pe-3 text-right text-sm flex items-center justify-end space-x-4' : 'whitespace-nowrap min-w-min';
+
 @endphp
 
 <td wire:key="{{ $tableName . '-table-td-'.$row->{$primaryKey}.'-'.$column->getSlug() }}"
@@ -14,7 +16,7 @@
         {{
             $attributes->merge($customAttributes)
                 ->class([
-                    'px-6 py-4 whitespace-nowrap text-sm font-medium dark:text-white' => $isTailwind && ($customAttributes['default'] ?? true),
+                    $td_class => $isTailwind && ($customAttributes['default'] ?? true),
                     'hidden' =>  $isTailwind && $column && $column->shouldCollapseAlways(),
                     'hidden md:table-cell' => $isTailwind && $column && $column->shouldCollapseOnMobile(),
                     'hidden lg:table-cell' => $isTailwind && $column && $column->shouldCollapseOnTablet(),

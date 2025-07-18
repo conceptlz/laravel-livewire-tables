@@ -6,13 +6,12 @@
     $this->getParametersForConfigurableArea('before-pagination')
 )
 
-<div {{ $this->getPaginationWrapperAttributesBag() }}>
-    @if ($this->paginationVisibilityIsEnabled())
+@if ($this->paginationVisibilityIsEnabled())
         @if ($isTailwind)
-            <div class="mt-4 px-4 md:p-0 sm:flex justify-between items-center space-y-4 sm:space-y-0">
+            <div class="flex items-center justify-between mt-4">
                 <div>
                     @if ($this->paginationIsEnabled && $this->isPaginationMethod('standard') && $currentRows->lastPage() > 1 && $this->showPaginationDetails)
-                        <p class="paged-pagination-results text-sm text-gray-700 leading-5 dark:text-white">
+                        <flux:text>
                                 <span>{{ __($localisationPath.'Showing') }}</span>
                                 <span class="font-medium">{{ $currentRows->firstItem() }}</span>
                                 <span>{{ __($localisationPath.'to') }}</span>
@@ -20,22 +19,22 @@
                                 <span>{{ __($localisationPath.'of') }}</span>
                                 <span class="font-medium"><span x-text="paginationTotalItemCount"></span></span>
                                 <span>{{ __($localisationPath.'results') }}</span>
-                        </p>
+                        </flux:text>
                     @elseif ($this->paginationIsEnabled && $this->isPaginationMethod('simple') && $this->showPaginationDetails)
-                        <p class="paged-pagination-results text-sm text-gray-700 leading-5 dark:text-white">
+                        <flux:text>
                             <span>{{ __($localisationPath.'Showing') }}</span>
                             <span class="font-medium">{{ $currentRows->firstItem() }}</span>
                             <span>{{ __($localisationPath.'to') }}</span>
                             <span class="font-medium">{{ $currentRows->lastItem() }}</span>
-                        </p>
+                        </flux:text>
                     @elseif ($this->paginationIsEnabled && $this->isPaginationMethod('cursor'))
                     @else
                         @if($this->showPaginationDetails)
-                            <p class="total-pagination-results text-sm text-gray-700 leading-5 dark:text-white">
+                            <flux:text>
                                 <span>{{ __($localisationPath.'Showing') }}</span>
                                 <span class="font-medium">{{ $currentRows->count() }}</span>
                                 <span>{{ __($localisationPath.'results') }}</span>
-                            </p>
+                            </flux:text>
                         @endif
                     @endif
                 </div>
@@ -104,8 +103,8 @@
                 </div>
             @endif
         @endif
-    @endif
-</div>
+@endif
+
 
 @includeWhen(
     $this->hasConfigurableAreaFor('after-pagination'), 
