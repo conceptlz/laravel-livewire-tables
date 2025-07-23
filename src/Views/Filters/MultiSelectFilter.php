@@ -11,7 +11,7 @@ class MultiSelectFilter extends Filter
         IsArrayFilter;
     use HasWireables;
 
-    public string $wireMethod = 'live.debounce.250ms';
+    public string $wireMethod = 'defer';
 
     protected string $view = 'livewire-tables::components.tools.filters.multi-select';
 

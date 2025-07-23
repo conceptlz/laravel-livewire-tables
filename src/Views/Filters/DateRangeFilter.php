@@ -14,7 +14,7 @@ class DateRangeFilter extends Filter
         HasConfig;
     use HasWireables;
 
-    public string $wireMethod = 'blur';
+    public string $wireMethod = 'defer';
 
     protected string $view = 'livewire-tables::components.tools.filters.date-range';
 
@@ -24,7 +24,7 @@ class DateRangeFilter extends Filter
 
     public function getKeys(): array
     {
-        return ['minDate' => '', 'maxDate' => ''];
+        return ['start' => '', 'end' => ''];
     }
 
     public function validate(array|string|null $values): array|bool
@@ -36,11 +36,11 @@ class DateRangeFilter extends Filter
 
         $returnedValues = $this->populateReturnedValues($values);
 
-        if ($returnedValues['minDate'] == '' || $returnedValues['maxDate'] == '' || ! $this->validateDateFormat($returnedValues, $dateFormat)) {
+        if ($returnedValues['start'] == '' || $returnedValues['end'] == '' || ! $this->validateDateFormat($returnedValues, $dateFormat)) {
             return false;
         }
 
-        if (! (($startDate = $this->createCarbonDate($returnedValues['minDate'])) instanceof Carbon) || ! (($endDate = $this->createCarbonDate($returnedValues['maxDate'])) instanceof Carbon)) {
+        if (! (($startDate = $this->createCarbonDate($returnedValues['start'])) instanceof Carbon) || ! (($endDate = $this->createCarbonDate($returnedValues['end'])) instanceof Carbon)) {
             return false;
         }
 
@@ -91,25 +91,25 @@ class DateRangeFilter extends Filter
 
     protected function populateReturnedValues(string|array $values): array
     {
-        $returnedValues = ['minDate' => '', 'maxDate' => ''];
+        $returnedValues = ['start' => '', 'end' => ''];
         if (is_array($values)) {
-            if (! isset($values['minDate']) || ! isset($values['maxDate'])) {
+            if (! isset($values['start']) || ! isset($values['end'])) {
                 foreach ($values as $index => $value) {
-                    if ($index === 0 || $index == '0' || strtolower($index) == 'mindate') {
-                        $returnedValues['minDate'] = $value;
+                    if ($index === 0 || $index == '0' || strtolower($index) == 'start') {
+                        $returnedValues['start'] = $value;
                     }
-                    if ($index == 1 || $index == '1' || strtolower($index) == 'maxdate') {
-                        $returnedValues['maxDate'] = $value;
+                    if ($index == 1 || $index == '1' || strtolower($index) == 'end') {
+                        $returnedValues['end'] = $value;
                     }
                 }
             } else {
-                $returnedValues['minDate'] = $values['minDate'];
-                $returnedValues['maxDate'] = $values['maxDate'];
+                $returnedValues['start'] = $values['start'];
+                $returnedValues['end'] = $values['end'];
             }
         } else {
             $valueArray = explode(' ', $values);
-            $returnedValues['minDate'] = $valueArray[0];
-            $returnedValues['maxDate'] = ((isset($valueArray[1]) && $valueArray[1] != 'to') ? $valueArray[1] : (isset($valueArray[2]) ? $valueArray[2] : ''));
+            $returnedValues['start'] = $valueArray[0];
+            $returnedValues['end'] = ((isset($valueArray[1]) && $valueArray[1] != 'to') ? $valueArray[1] : (isset($valueArray[2]) ? $valueArray[2] : ''));
         }
 
         return $returnedValues;
@@ -118,8 +118,8 @@ class DateRangeFilter extends Filter
     protected function validateDateFormat(array $returnedValues, string $dateFormat): bool
     {
         $validator = Validator::make($returnedValues, [
-            'minDate' => 'required|date_format:'.$dateFormat,
-            'maxDate' => 'required|date_format:'.$dateFormat,
+            'start' => 'required|date_format:'.$dateFormat,
+            'end' => 'required|date_format:'.$dateFormat,
         ]);
         if ($validator->fails()) {
             return false;
@@ -149,24 +149,24 @@ class DateRangeFilter extends Filter
             $minDate = '';
             $maxDate = '';
 
-            if (array_key_exists('minDate', $value)) {
-                $minDate = $value['minDate'];
+            if (array_key_exists('start', $value)) {
+                $minDate = $value['start'];
             } elseif (array_key_exists('min', $value)) {
                 $minDate = $value['min'];
             } elseif (array_key_exists(0, $value)) {
                 $minDate = $value[0];
             }
 
-            if (array_key_exists('maxDate', $value)) {
-                $maxDate = $value['maxDate'];
+            if (array_key_exists('end', $value)) {
+                $maxDate = $value['end'];
             } elseif (array_key_exists('max', $value)) {
                 $maxDate = $value['max'];
             } elseif (array_key_exists(1, $value)) {
                 $maxDate = $value[1];
             }
-            $this->filterDefaultValue = ['minDate' => $minDate, 'maxDate' => $maxDate];
+            $this->filterDefaultValue = ['start' => $minDate, 'end' => $maxDate];
         } else {
-            $this->filterDefaultValue = ['minDate' => $value, 'maxDate' => $value];
+            $this->filterDefaultValue = ['start' => $value, 'end' => $value];
         }
 
         return $this;
@@ -181,8 +181,8 @@ class DateRangeFilter extends Filter
                 $this->setPillsLocale($this->getConfig('locale'));
             }
 
-            $minDate = $this->createCarbonDate($validatedValue['minDate']);
-            $maxDate = $this->createCarbonDate($validatedValue['maxDate']);
+            $minDate = $this->createCarbonDate($validatedValue['start']);
+            $maxDate = $this->createCarbonDate($validatedValue['end']);
 
             if (($minDate instanceof Carbon) && $maxDate instanceof Carbon) {
                 return $this->outputTranslatedDate($minDate)
@@ -201,15 +201,15 @@ class DateRangeFilter extends Filter
         }
         $values = [];
         if (is_array($value)) {
-            if (! isset($value['minDate']) || ! isset($value['maxDate'])) {
+            if (! isset($value['start']) || ! isset($value['end'])) {
                 if (isset($value[0])) {
-                    $values['minDate'] = $value[0];
+                    $values['start'] = $value[0];
                 } else {
                     return true;
                 }
 
                 if (isset($value[1])) {
-                    $values['maxDate'] = $value[1];
+                    $values['end'] = $value[1];
                 } else {
                     return true;
                 }
@@ -227,8 +227,8 @@ class DateRangeFilter extends Filter
     {
         if ($dateInput != '') {
             if (is_array($dateInput)) {
-                $startDate = isset($dateInput['minDate']) ? $dateInput['minDate'] : (isset($dateInput[1]) ? $dateInput[1] : date('Y-m-d'));
-                $endDate = isset($dateInput['maxDate']) ? $dateInput['maxDate'] : (isset($dateInput[0]) ? $dateInput[0] : date('Y-m-d'));
+                $startDate = isset($dateInput['start']) ? $dateInput['start'] : (isset($dateInput[1]) ? $dateInput[1] : date('Y-m-d'));
+                $endDate = isset($dateInput['end']) ? $dateInput['end'] : (isset($dateInput[0]) ? $dateInput[0] : date('Y-m-d'));
             } else {
                 $dateArray = explode(',', $dateInput);
                 $startDate = isset($dateArray[0]) ? $dateArray[0] : date('Y-m-d');

@@ -4,8 +4,12 @@ namespace Rappasoft\LaravelLivewireTables\Views\Filters\Traits;
 
 trait IsStringFilter
 {
-    public function isEmpty(?string $value): bool
+    public function isEmpty($value): bool
     {
+        if (!is_string($value) && !is_null($value)) {
+            return false;
+        }
+        
         return is_null($value) || $value === '';
     }
 

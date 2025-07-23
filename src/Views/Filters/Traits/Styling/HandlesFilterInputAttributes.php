@@ -23,8 +23,10 @@ trait HandlesFilterInputAttributes
 
     protected function getCoreInputAttributes(): array
     {
+        $wireMethod = $this->checkWireMethod('wireMethod');
         return [
             'id' => $this->getGenericDisplayData()['tableName'].'-filter-'.$this->getKey().($this->hasCustomPosition() ? '-'.$this->getCustomPosition() : ''),
+            'wire:model.'. $this->{$wireMethod} => 'filterComponents.'.$this->getKey(),
             'default-styling' => true,
             'default-colors' => true,
         ];

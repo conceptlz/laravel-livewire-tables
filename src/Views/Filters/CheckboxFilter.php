@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\Traits\{HasOptions, HasWireables, IsArrayFilter};
 
-class MultiSelectDropdownFilter extends Filter
+class CheckboxFilter extends Filter
 {
     use HasOptions,
         IsArrayFilter;
@@ -14,7 +14,7 @@ class MultiSelectDropdownFilter extends Filter
 
     public string $wireMethod = 'defer';
 
-    protected string $view = 'livewire-tables::components.tools.filters.multi-select-dropdown';
+    protected string $view = 'livewire-tables::components.tools.filters.checkbox';
 
     protected string $configPath = 'livewire-tables.multiSelectDropdownFilter.defaultConfig';
 

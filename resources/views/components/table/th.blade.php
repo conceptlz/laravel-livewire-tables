@@ -1,4 +1,4 @@
-@aware(['isTailwind','isBootstrap','columnCount','tableName'])
+@aware(['isTailwind','isBootstrap','columnCount','tableName','appliedFilters'])
 @props(['column', 'index'])
 
 @php
@@ -9,7 +9,7 @@
     $customIconAttributes = $this->getThSortIconAttributes($column);
     $direction = $column->hasField() ? $this->getSort($column->getColumnSelectName()) : $this->getSort($column->getSlug()) ?? null;
     $th_class = ($columnCount == $index) ? 'relative py-4 pl-3 pr-6 bg-zinc-100 shadow-[inset_1px_-1px_rgba(0,0,0,0.1)] shadow-zinc-200 min-w-min w-full' : 'text-left whitespace-nowrap';
-
+    $applied_filter_keys = array_keys($appliedFilters);
 @endphp
 
 <th {{
@@ -41,11 +41,15 @@
                     @if($this->filtersAreEnabled() &&
                             $this->filtersVisibilityIsEnabled() &&
                             $this->hasVisibleFilters() && ($column->hasSecondaryHeader() && $column->hasSecondaryHeaderCallback()))
-                        <flux:dropdown position="bottom" align="center" wire:key="{{ $tableName .'-'. $column->getSlug() .'dropdown-'. $index }}">
-                            <flux:button variant="subtle" size="xs" wire:key="{{ $tableName .'-'. $column->getSlug() .'filterbutton-'. $index }}" >
+                        <flux:dropdown x-data="{ dynamicId: '{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}' }" position="bottom" align="center" wire:key="{{ $tableName .'-'. $column->getSlug() .'dropdown-'. $index }}" keep-open>
+                            <flux:button variant="subtle" size="xs" x-ref="{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}" wire:key="{{ $tableName .'-'. $column->getSlug() .'filterbutton-'. $index }}" >
                                 <x-phosphor-funnel class="size-3" />
                             </flux:button>
-                             <flux:popover class="min-w-60 flex flex-col gap-4 shadow-xl">
+                             <flux:popover class="min-w-60 flex flex-col gap-4 shadow-xl" keep-open>
+                                    @php
+                                        $filter_column = $this->getFilterByKey($column->getSecondaryHeaderCallback());
+                                        $filterKey = $filter_column->getKey();
+                                    @endphp
                                    @if( $column->secondaryHeaderCallbackIsFilter())
                                         {{ $column->getSecondaryHeaderFilter($column->getSecondaryHeaderCallback(), $this->getFilterGenericData) }}    
                                     @elseif($column->secondaryHeaderCallbackIsString())
@@ -53,6 +57,16 @@
                                     @else
                                         {{ $column->getNewSecondaryHeaderContents($this->getRows) }}
                                     @endif
+                                    <flux:separator class="my-2" />
+                                    <flux:button variant="primary" class="w-full" @click="$wire.dispatch('refreshDatatable');$refs[dynamicId].click();">
+                                        <x-phosphor-funnel class="size-5" /> {{ __("Apply")}}
+                                    </flux:button>
+                                     <div class="space-y-2 flex flex-col items-start">
+
+                                        <flux:button variant="subtle" :disabled="!in_array($filterKey,$applied_filter_keys)" size="sm"  x-on:click.prevent="resetSpecificFilter('{{ $filterKey }}');$refs[dynamicId].click();">
+                                            <x-phosphor-prohibit-inset class="size-5" /> {{ __("Clear filter")}}
+                                        </flux:button>
+                                    </div>
                              </flux:popover>
                         </flux:dropdown>
                     @endif

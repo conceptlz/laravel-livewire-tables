@@ -11,7 +11,7 @@ class TextFilter extends Filter
     use HasWireables;
     use HandlesWildcardStrings;
 
-    public string $wireMethod = 'blur';
+    public string $wireMethod = 'defer';
 
     protected string $view = 'livewire-tables::components.tools.filters.text-field';
 

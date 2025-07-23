@@ -20,7 +20,8 @@ trait IsFilter
         HasVisibility,
         HasView,
         HandlesFilterInputAttributes,
-        HandlesClearButton;
+        HandlesClearButton,
+        HasFilterRelation;
 
     protected string $name;
 

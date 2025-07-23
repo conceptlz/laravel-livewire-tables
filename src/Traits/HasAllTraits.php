@@ -3,6 +3,7 @@
 namespace Rappasoft\LaravelLivewireTables\Traits;
 
 use Rappasoft\LaravelLivewireTables\Traits\Core\{HasCustomAttributes, HasLocalisations};
+use Rappasoft\LaravelLivewireTables\Traits\Filters\HandlesConditionalFilters;
 use Rappasoft\LaravelLivewireTables\Views\Traits\Core\HasTheme;
 
 trait HasAllTraits
@@ -12,7 +13,8 @@ trait HasAllTraits
     use HasLocalisations,
         WithLoadingPlaceholder,
         HasTheme,
-        WithFilters;
+        WithFilters,
+        HandlesConditionalFilters;
     use WithQuery,
         ComponentUtilities,
         WithActions,
@@ -37,5 +39,6 @@ trait HasAllTraits
         WithSessionStorage,
         WithTableAttributes,
         WithTools,
-        WithExport;
+        WithExport,
+        WithSavingState;
 }

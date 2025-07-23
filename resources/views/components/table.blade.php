@@ -1,4 +1,4 @@
-@aware([ 'tableName','isTailwind','isBootstrap'])
+@aware([ 'tableName','isTailwind','isBootstrap','appliedFilters'])
 
 @php
     $customAttributes = [

@@ -7,7 +7,8 @@
 @php($isBootstrap5 = $this->isBootstrap5)
 @php($localisationPath = $this->getLocalisationPath)
 @php($columnCount = count($this->selectedVisibleColumns) - 1)
-<x-livewire-tables::wrapper  :tableName="$tableName" :$primaryKey :$isTailwind :$isBootstrap :$isBootstrap4 :$isBootstrap5 :$localisationPath :columnCount="$columnCount">
+@php($applied_filters = $this->getAppliedFiltersWithValues())
+<x-livewire-tables::wrapper  :tableName="$tableName" :$primaryKey :$isTailwind :$isBootstrap :$isBootstrap4 :$isBootstrap5 :$localisationPath :columnCount="$columnCount" :appliedFilters="$applied_filters">
 
     @includeWhen(
                 $this->hasConfigurableAreaFor('before-wrapper'),

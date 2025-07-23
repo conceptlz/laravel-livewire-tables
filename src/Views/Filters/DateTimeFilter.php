@@ -12,7 +12,7 @@ class DateTimeFilter extends Filter
         IsStringFilter;
     use HasWireables;
 
-    public string $wireMethod = 'live';
+    public string $wireMethod = 'defer';
 
     protected string $view = 'livewire-tables::components.tools.filters.datetime';
 
