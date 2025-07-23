@@ -31,47 +31,48 @@
             <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
         @else
             @if ($isTailwind)
-                <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
-                <div class="ms-2 inline-flex items-center justify-end space-x-0.5" {{ $attributes->merge($customSortButtonAttributes) }}>
-                    @if($this->sortingIsEnabled() && ($column->isSortable() || $column->getSortCallback()))
-                        <flux:button variant="subtle" size="xs"  wire:click="sortBy('{{ $column->getColumnSortKey() }}')">
-                            <x-phosphor-caret-up-down class="size-3" />
-                        </flux:button>
-                    @endif
-                    @if($this->filtersAreEnabled() &&
-                            $this->filtersVisibilityIsEnabled() &&
-                            $this->hasVisibleFilters() && ($column->hasSecondaryHeader() && $column->hasSecondaryHeaderCallback()))
-                        <flux:dropdown x-data="{ dynamicId: '{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}' }" position="bottom" align="center" wire:key="{{ $tableName .'-'. $column->getSlug() .'dropdown-'. $index }}" keep-open>
-                            <flux:button variant="subtle" size="xs" x-ref="{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}" wire:key="{{ $tableName .'-'. $column->getSlug() .'filterbutton-'. $index }}" >
-                                <x-phosphor-funnel class="size-3" />
+                <div class="flex items-center justify-between">
+                    <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
+                    <div class="ms-2 inline-flex items-center justify-end space-x-0.5" {{ $attributes->merge($customSortButtonAttributes) }}>
+                        @if($this->sortingIsEnabled() && ($column->isSortable() || $column->getSortCallback()))
+                            <flux:button variant="subtle" size="xs"  wire:click="sortBy('{{ $column->getColumnSortKey() }}')">
+                                <x-phosphor-caret-up-down class="size-3" />
                             </flux:button>
-                             <flux:popover class="min-w-60 flex flex-col gap-4 shadow-xl" keep-open>
-                                    @php
-                                        $filter_column = $this->getFilterByKey($column->getSecondaryHeaderCallback());
-                                        $filterKey = $filter_column->getKey();
-                                    @endphp
-                                   @if( $column->secondaryHeaderCallbackIsFilter())
-                                        {{ $column->getSecondaryHeaderFilter($column->getSecondaryHeaderCallback(), $this->getFilterGenericData) }}    
-                                    @elseif($column->secondaryHeaderCallbackIsString())
-                                        {{ $column->getSecondaryHeaderFilter($this->getFilterByKey($column->getSecondaryHeaderCallback()), $this->getFilterGenericData) }}
-                                    @else
-                                        {{ $column->getNewSecondaryHeaderContents($this->getRows) }}
-                                    @endif
-                                    <flux:separator class="my-2" />
-                                    <flux:button variant="primary" class="w-full" @click="$wire.dispatch('refreshDatatable');$refs[dynamicId].click();">
-                                        <x-phosphor-funnel class="size-5" /> {{ __("Apply")}}
-                                    </flux:button>
-                                     <div class="space-y-2 flex flex-col items-start">
-
-                                        <flux:button variant="subtle" :disabled="!in_array($filterKey,$applied_filter_keys)" size="sm"  x-on:click.prevent="resetSpecificFilter('{{ $filterKey }}');$refs[dynamicId].click();">
-                                            <x-phosphor-prohibit-inset class="size-5" /> {{ __("Clear filter")}}
+                        @endif
+                        @if($this->filtersAreEnabled() &&
+                                $this->filtersVisibilityIsEnabled() &&
+                                $this->hasVisibleFilters() && ($column->hasSecondaryHeader() && $column->hasSecondaryHeaderCallback()))
+                            <flux:dropdown x-data="{ dynamicId: '{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}' }" position="bottom" align="center" wire:key="{{ $tableName .'-'. $column->getSlug() .'dropdown-'. $index }}" keep-open>
+                                <flux:button variant="subtle" size="xs" x-ref="{{ $tableName .'-'. $column->getSlug() .'filterbutton' }}" wire:key="{{ $tableName .'-'. $column->getSlug() .'filterbutton-'. $index }}" >
+                                    <x-phosphor-funnel class="size-3" />
+                                </flux:button>
+                                <flux:popover class="min-w-60 flex flex-col gap-4 shadow-xl" keep-open>
+                                        @php
+                                            $filter_column = $this->getFilterByKey($column->getSecondaryHeaderCallback());
+                                            $filterKey = $filter_column->getKey();
+                                        @endphp
+                                    @if( $column->secondaryHeaderCallbackIsFilter())
+                                            {{ $column->getSecondaryHeaderFilter($column->getSecondaryHeaderCallback(), $this->getFilterGenericData) }}    
+                                        @elseif($column->secondaryHeaderCallbackIsString())
+                                            {{ $column->getSecondaryHeaderFilter($this->getFilterByKey($column->getSecondaryHeaderCallback()), $this->getFilterGenericData) }}
+                                        @else
+                                            {{ $column->getNewSecondaryHeaderContents($this->getRows) }}
+                                        @endif
+                                        <flux:separator class="my-2" />
+                                        <flux:button variant="primary" class="w-full" @click="$wire.dispatch('refreshDatatable');$refs[dynamicId].click();">
+                                            <x-phosphor-funnel class="size-5" /> {{ __("Apply")}}
                                         </flux:button>
-                                    </div>
-                             </flux:popover>
-                        </flux:dropdown>
-                    @endif
+                                        <div class="space-y-2 flex flex-col items-start">
+
+                                            <flux:button variant="subtle" :disabled="!in_array($filterKey,$applied_filter_keys)" size="sm"  x-on:click.prevent="resetSpecificFilter('{{ $filterKey }}');$refs[dynamicId].click();">
+                                                <x-phosphor-prohibit-inset class="size-5" /> {{ __("Clear filter")}}
+                                            </flux:button>
+                                        </div>
+                                </flux:popover>
+                            </flux:dropdown>
+                        @endif
+                    </div>
                 </div>
-                
             @elseif ($isBootstrap)
                 <div wire:click="sortBy('{{ $column->getColumnSortKey() }}')" {{
                         $attributes->merge($customSortButtonAttributes)
