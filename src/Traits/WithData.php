@@ -38,7 +38,9 @@ trait WithData
         // Fire hook for rowsRetrieved
         $this->callHook('rowsRetrieved', [$executedQuery]);
         $this->callTraitHook('rowsRetrieved', [$executedQuery]);
-
+        //Custom changes starts
+        $this->setPersistCookie();
+         //Custom changes ends
         return $executedQuery;
     }
 
@@ -74,7 +76,6 @@ trait WithData
         if ($this->hasExtraWithCounts()) {
             $builder->withCount($this->getExtraWithCounts());
         }
-
         $this->setBuilder($builder);
 
         return $this->getBuilder();

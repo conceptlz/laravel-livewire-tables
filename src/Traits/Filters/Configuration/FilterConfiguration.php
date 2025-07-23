@@ -119,7 +119,7 @@ trait FilterConfiguration
                         $this->callHook('filterApplying', ['filter' => $filter->getKey(), 'value' => $value]);
                         $this->callTraitHook('filterApplying', ['filter' => $filter->getKey(), 'value' => $value]);
 
-                        $query->where(function ($query) use ($value,$key,$filter) {
+                        $this->getBuilder()->where(function ($query) use ($value,$key,$filter) {
 
                             $relation_key = ($filter->hasFilterRelationKey()) ? $filter->getFilterRelationKey() : $key;
                             

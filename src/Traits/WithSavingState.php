@@ -30,7 +30,7 @@ trait WithSavingState
         {
             return;
         }
-
+        \Log::info('set-cookie');
         // if (request()->cookie($this->getPersistSessionKey()) != null) {
         //     addApilog('cookies-forget','');
         //     Cookie::forget($this->getPersistSessionKey());
@@ -41,9 +41,11 @@ trait WithSavingState
     }
     private function getPersistCookieData(): void
     {
+        \Log::info('cookie ' . $this->getPersistSessionKey());
         if (request()->cookie($this->getPersistSessionKey()) != null && $this->persist && $this->getTableName() != 'table') {
 
             $data = json_decode(request()->cookie($this->getPersistSessionKey()),true);
+            \Log::info('cookie-data' , $data);
             $this->restorePersistStateFromArray($data);
         }
 
@@ -61,7 +63,6 @@ trait WithSavingState
             'perPage' => $this->getPerPage(),
             //'page' => $this->paginators[$this->getComputedPageName()] ?? 1,
             'appliedFilters' => $this->appliedFilters,
-            //'filterConditions' => $this->filterConditions,
             'filtersStatus' => $this->getFiltersStatus(),
            
         ];
@@ -79,31 +80,9 @@ trait WithSavingState
         }
         if(isset($tableState['appliedFilters']))
         {
-            foreach($tableState['appliedFilters'] as $key => $filters)
-            {
-                foreach($filters as $filterKey => $value)
-                {
-                    $filter = $this->getFilterByKey($filterKey);
-                    
-                    if($filter && $filter->type == 'date-range')
-                    {
-                        if ($filter->hasFilterDefaultValue()) {
-                            $tableState['appliedFilters'][$key][$filterKey] = $filter->getFilterDefaultValue();
-                        }
-                        else
-                        {
-                            $tableState['appliedFilters'][$key][$filterKey] = $filter->getDefaultValue();
-                        }
-                    }
-                }
-                
-            }
-            $this->appliedFilters = $tableState['appliedFilters'];
+            $this->appliedFilters = $this->filterComponents = $tableState['appliedFilters'];
         }
-        // if(isset($tableState['filterConditions']))
-        // {
-        //     $this->filterConditions = $tableState['filterConditions'];
-        // }
+        \Log::info('$this->appliedFilters',$this->appliedFilters);
         $this->setSortingPillsStatus($tableState['sortingPillsStatus']);
         $this->setSortingStatus($tableState['sortingStatus']);
         $this->setPaginationStatus($tableState['paginationStatus']);
