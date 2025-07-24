@@ -43,7 +43,6 @@ trait WithSavingState
     {
         \Log::info('cookie ' . $this->getPersistSessionKey());
         if (request()->cookie($this->getPersistSessionKey()) != null && $this->persist && $this->getTableName() != 'table') {
-
             $data = json_decode(request()->cookie($this->getPersistSessionKey()),true);
             \Log::info('cookie-data' , $data);
             $this->restorePersistStateFromArray($data);

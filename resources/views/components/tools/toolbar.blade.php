@@ -55,12 +55,10 @@
             'space-x-3 flex items-center justify-end' => $isTailwind,
         ]) >
                 @includeWhen($this->hasConfigurableAreaFor('toolbar-right-start'), $this->getConfigurableAreaFor('toolbar-right-start'), $this->getParametersForConfigurableArea('toolbar-right-start'))
-                <flux:button variant="filled" icon="phosphor-presentation-chart-bold" icon:variant="mini">
-                     {{ __("Statistics")}}
-                </flux:button>
-                  @if($this->showActionsInToolbarRight())
-                    <x-livewire-tables::includes.actions/>
-                @endif
+               
+                    @if($this->showActionsInToolbarRight())
+                        <x-livewire-tables::includes.actions/>
+                    @endif
                   @if ($this->showFiltersButton())
                         <x-livewire-tables::tools.toolbar.items.filter-button />
                     @endif

@@ -56,7 +56,7 @@ trait WithData
 
         $this->setBuilder($this->applyFilters());
 
-        $builder = $this->getBuilder();
+        $builder = $this->getBuilder();//dd($builder->toSql());
 
         if ($this->hasExtraWiths()) {
             $builder->with($this->getExtraWiths());
@@ -76,6 +76,7 @@ trait WithData
         if ($this->hasExtraWithCounts()) {
             $builder->withCount($this->getExtraWithCounts());
         }
+        \Log::info($builder->toSql());
         $this->setBuilder($builder);
 
         return $this->getBuilder();

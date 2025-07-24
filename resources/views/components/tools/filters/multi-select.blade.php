@@ -1,5 +1,5 @@
 <x-livewire-tables::tools.filter-label :$filter :$filterLayout :$tableName :$isTailwind :$isBootstrap4 :$isBootstrap5 :$isBootstrap />
-<flux:select :attributes="$filterInputAttributes->merge()" variant="listbox" multiple searchable indicator="checkbox" clearable>
+<flux:select :attributes="$filterInputAttributes->merge()" placeholder="Select {{$filter->getName()}}" variant="listbox" multiple searchable indicator="checkbox" clearable>
    
     @foreach($filter->getOptions() as $key => $value)
         @if (is_iterable($value))

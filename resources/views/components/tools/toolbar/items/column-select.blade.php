@@ -15,6 +15,7 @@
                 <flux:checkbox.group class="text-sm space-y-4" >
                     <flux:checkbox.all label="Select all" {{ $attributes->merge($columnmodelDirective) }} wire:key="{{ $tableName }}-columnSelect-selectAll-{{ rand(0,1000) }}"/>
                     <flux:separator class="my-2" />
+                   
                     @foreach ($this->getColumnsForColumnSelect() as $columnSlug => $columnTitle)
                     <flux:checkbox  wire:key="{{ $tableName }}-columnSelect-{{ $loop->index }}" wire:model.live="selectedColumns" wire:target="selectedColumns" wire:loading.attr="disabled" value="{{ $columnSlug }}" label="{{ $columnTitle }}"  />
                      @endforeach

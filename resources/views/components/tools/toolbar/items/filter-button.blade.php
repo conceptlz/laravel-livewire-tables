@@ -69,7 +69,7 @@ $applied_filter_keys = array_keys($appliedFilters);
                                 <flux:accordion.content>
                                     <div class="p-6 bg-zinc-50 rounded-lg space-y-4">
                                          {{ $filter->setGenericDisplayData($this->getFilterGenericData)->render() }}
-                                         <flux:link href="#" class="text-bco-500" x-on:click="resetSpecificFilter('{{ $filter->getKey() }}');$flux.modal('{{ $tableName }}-filter-slideout').close()">{{ __("remove") }}</flux:link>
+                                         <flux:link href="javascript:void(0)" class="text-bco-500" x-on:click="resetSpecificFilter('{{ $filter->getKey() }}');$flux.modal('{{ $tableName }}-filter-slideout').close()">{{ __("remove") }}</flux:link>
                                     </div>
                                 </flux:accordion.content>
                             </flux:accordion.item>
@@ -92,7 +92,7 @@ $applied_filter_keys = array_keys($appliedFilters);
                         <div class="{{(count($visiable_filters) > 10) ? 'w-84 grid grid-cols-2' : 'w-42 grid grid-cols-1' }} gap-4 p-3 capitalize text-sm">
                              @foreach ($visiable_filters as $filter)
                                 @if(!in_array($filter->getKey(), $applied_filter_keys))
-                                <flux:link href="#" variant="ghost" class="text-slate-800" wire:key="{{ $tableName }}-filter-{{ $filter->getKey() }}-menuitem" @click="selectFilter('{{ $filter->getKey() }}');$refs['{{ $tableName }}-add-filter'].click();"> {{ $filter->getName() }}</flux:link>
+                                <flux:link href="javascript:void(0)" variant="ghost" class="text-slate-800" wire:key="{{ $tableName }}-filter-{{ $filter->getKey() }}-menuitem" @click="selectFilter('{{ $filter->getKey() }}');$refs['{{ $tableName }}-add-filter'].click();"> {{ $filter->getName() }}</flux:link>
                                 @endif
                             @endforeach
                         </div>
