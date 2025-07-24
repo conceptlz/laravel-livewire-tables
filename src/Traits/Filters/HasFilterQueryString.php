@@ -8,7 +8,7 @@ trait HasFilterQueryString
 {
     protected function queryStringHasFilterQueryString(): array
     {
-        return ($this->queryStringForFilterIsEnabled()) ?
+        return ($this->queryStringIsEnabled() && $this->queryStringForFilterIsEnabled()) ?
             [
                 'appliedFilters' => ['except' => null, 'history' => false, 'keep' => false, 'as' => $this->getQueryStringAliasForFilter()],
                 'filterComponents' => ['except' => null, 'history' => false, 'keep' => false, 'as' => $this->getQueryStringAliasForFilter()],

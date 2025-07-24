@@ -6,7 +6,7 @@ trait HasQueryStringForSort
 {
     protected function queryStringHasQueryStringForSort(): array
     {
-        return ($this->queryStringForSortEnabled() && $this->sortingIsEnabled()) ? ['sorts' => ['except' => null, 'history' => false, 'keep' => false, 'as' => $this->getQueryStringAliasForSort()]] : [];
+        return ($this->queryStringIsEnabled() && $this->queryStringForSortEnabled() && $this->sortingIsEnabled()) ? ['sorts' => ['except' => null, 'history' => false, 'keep' => false, 'as' => $this->getQueryStringAliasForSort()]] : [];
 
     }
 
