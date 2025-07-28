@@ -146,7 +146,8 @@ trait FilterConfiguration
                                 //addApilog('$this->complexValue($condition,$value)',$this->complexValue($condition,$value));
                                 $query->Where(
                                     $relation_key,
-                                    $value
+                                    'like',
+                                   '%'. $value .'%'
                                 );
                             }
                                 
