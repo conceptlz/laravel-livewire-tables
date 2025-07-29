@@ -133,8 +133,8 @@ trait FilterConfiguration
                             }else if($filter instanceof DateRangeFilter)
                             {
                                 $query
-                                ->whereDate($relation_key, '>=', $value['minDate']) 
-                                ->whereDate($relation_key, '<=', $value['maxDate']);
+                                ->whereDate($relation_key, '>=', $value['start']) 
+                                ->whereDate($relation_key, '<=', $value['end']);
                             }
                             else if($filter instanceof NumberRangeFilter)
                             {
