@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\Events\FilterApplied;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
-use Rappasoft\LaravelLivewireTables\Views\Filters\{BooleanFilter,MultiSelectDropdownFilter, MultiSelectFilter};
+use Rappasoft\LaravelLivewireTables\Views\Filters\{BooleanFilter,MultiSelectDropdownFilter, MultiSelectFilter,DateRangeFilter,NumberRangeFilter};
 
 trait FilterConfiguration
 {
