@@ -27,7 +27,7 @@
         ->except(['default', 'default-colors', 'default-styling'])
 }}>
     @if($column->getColumnLabelStatus())
-        @unless ($this->sortingIsEnabled() && ($column->isSortable() || $column->getSortCallback()))
+        @unless (($this->sortingIsEnabled() && ($column->isSortable() || $column->getSortCallback())) || $column->hasSecondaryHeader() && $column->hasSecondaryHeaderCallback())
             <x-livewire-tables::table.th.label :$customLabelAttributes :columnTitle="$column->getTitle()" />
         @else
             @if ($isTailwind)
