@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\Events\FilterApplied;
 use Rappasoft\LaravelLivewireTables\Views\Filter;
-use Rappasoft\LaravelLivewireTables\Views\Filters\{BooleanFilter,MultiSelectDropdownFilter, MultiSelectFilter,DateRangeFilter,NumberRangeFilter};
+use Rappasoft\LaravelLivewireTables\Views\Filters\{BooleanFilter,MultiSelectDropdownFilter, MultiSelectFilter,DateRangeFilter,NumberRangeFilter,CheckboxFilter};
 
 trait FilterConfiguration
 {
@@ -123,7 +123,7 @@ trait FilterConfiguration
 
                             $relation_key = ($filter->hasFilterRelationKey()) ? $filter->getFilterRelationKey() : $key;
                             
-                            if($filter instanceof MultiSelectDropdownFilter || $filter instanceof MultiSelectFilter)
+                            if($filter instanceof MultiSelectDropdownFilter || $filter instanceof MultiSelectFilter || $filter instanceof CheckboxFilter)
                             {
                                 $query->WhereIn(
                                         $relation_key,
