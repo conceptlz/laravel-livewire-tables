@@ -37,7 +37,6 @@ $applied_filter_keys = array_keys($appliedFilters);
             this.reactiveKey++; // Optional: helps force rerender
         },
         isSelected(key) {
-            console.log('isSelected');
             return this.selectedFilters.hasOwnProperty(key);
         }
     }">

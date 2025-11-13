@@ -14,12 +14,12 @@
         wire:key="{{ $tableName }}-twrap"
         {{ $attributes->merge($customAttributes['wrapper'])
             ->class([
-                'mt-6 flow-root' => $customAttributes['wrapper']['default'] ?? true
+                'mt-6 flow-root relative' => $customAttributes['wrapper']['default'] ?? true
             ])
             ->except(['default','default-styling','default-colors']) }}
     >
     <div class="overflow-x-auto shadow-md ring-1 ring-zinc-200 ring-opacity-5 sm:rounded-lg">
-            <div class="inline-block overflow-hidden min-w-full align-middle relative">
+            <div class="inline-block overflow-hidden min-w-full align-middle ">
                 <table
                     wire:key="{{ $tableName }}-table"
                     {{ $attributes->merge($customAttributes['table'])
