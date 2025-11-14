@@ -127,10 +127,10 @@ class DateRangeFilter extends Filter
 
         return true;
     }
-
+    //changed default valu to empty aray
     public function getDefaultValue(): array
     {
-        return $this->getFilterDefaultValue();
+        return [];    
     }
 
     public function getFilterDefaultValue(): array
