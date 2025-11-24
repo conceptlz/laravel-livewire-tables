@@ -34,8 +34,8 @@
                                 'lds-hourglass' => $isBootstrap && ($loaderIcon['default'] ?? true),
                             ])
                             ->except(['default','default-styling','default-colors'])
-                }}></div>
-                <div>{!! $this->getLoadingPlaceholderContent() !!}</div>
+                }}><div>{!! $this->getLoadingPlaceholderContent() !!}</div></div>
+                
             </div>
         @endif
     </td>
