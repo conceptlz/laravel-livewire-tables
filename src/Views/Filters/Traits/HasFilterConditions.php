@@ -163,8 +163,7 @@ trait HasFilterConditions
         if (is_array($value))
         {
             $value['condition'] =(is_array($value) && isset($value['condition'])) ? $value['condition'] : $this->defaultCondition;
-            \Log::info('value-condition' . $value['condition']);
-            \Log::info('defaultCondition' . $this->defaultCondition);
+            
             if (is_array($value) && isset($value['value']) && isset($value['condition'])) {
                 $filterValue = $value['value'];
                 $condition = $value['condition'];

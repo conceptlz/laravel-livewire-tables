@@ -76,7 +76,11 @@ trait WithData
         if ($this->hasExtraWithCounts()) {
             $builder->withCount($this->getExtraWithCounts());
         }
-        \Log::info($builder->toSql());
+        if($this->debugIsEnabled())
+        {
+            \Log::info($builder->toSql());
+        }
+        
         $this->setBuilder($builder);
 
         return $this->getBuilder();

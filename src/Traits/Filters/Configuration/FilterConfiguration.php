@@ -14,12 +14,10 @@ trait FilterConfiguration
     #[On('set-filter')]
     public function setFilter(string $filterKey, string|array|null $value): void
     {
-        \Log::info('setFilter-filterKey',[$filterKey]);
-        \Log::info('setFilter-value',[$value]);
+       
         $filter = $this->getFilterByKey($filterKey);
         if($filter && $this->isConditionalFilter($filter))
         {
-            \Log::info('setFilter-condition');
             if (isset($value['value'])) {
                 $condition = isset($value['condition']) ? $value['condition'] : $filter->getDefaultCondition();
                 $inputValue = isset($value['value']) ? $value['value'] : $value;
@@ -30,7 +28,6 @@ trait FilterConfiguration
            $this->filterComponents[$filterKey] = $value;
            $this->appliedFilters[$filterKey] = ($value['value'] != '') ? $value : null;
         }else{
-            \Log::info('setFilter-nocovalue');
             $this->appliedFilters[$filterKey] = $this->filterComponents[$filterKey] = $value;
         }
 
@@ -42,8 +39,7 @@ trait FilterConfiguration
         $this->dispatch('filter-was-set', tableName: $this->getTableName(), filterKey: $filterKey, value: $value);
         $this->storeFilterValues();
         
-        \Log::info('setFilter',$this->filterComponents);
-        \Log::info('appliedFilters',$this->appliedFilters);
+      
     }
 
     #[On('clearFilters')]
@@ -94,11 +90,9 @@ trait FilterConfiguration
         if ($this->filtersAreEnabled() && $this->hasFilters() && $this->hasAppliedFiltersWithValues()) {
             foreach ($this->getFilters() as $filter) {
                 foreach ($this->getAppliedFiltersWithValues() as $key => $value) {
-                    \Log::info($key);
                     if ($filter->getKey() === $key && $filter->hasFilterCallback()) {
                         // Let the filter class validate the value
                         $value = $filter->validate($value);
-                        \Log::info($value);
                         if (! ($filter instanceof BooleanFilter) && ($value === false)) {
                             continue;
                         }

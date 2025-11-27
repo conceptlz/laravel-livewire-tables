@@ -30,7 +30,6 @@ trait WithSavingState
         {
             return;
         }
-        \Log::info('set-cookie');
         // if (request()->cookie($this->getPersistSessionKey()) != null) {
         //     addApilog('cookies-forget','');
         //     Cookie::forget($this->getPersistSessionKey());
@@ -41,10 +40,16 @@ trait WithSavingState
     }
     private function getPersistCookieData(): void
     {
-        \Log::info('cookie ' . $this->getPersistSessionKey());
+        if($this->debugIsEnabled())
+        {
+            \Log::info('cookie ' . $this->getPersistSessionKey());
+        }
         if (request()->cookie($this->getPersistSessionKey()) != null && $this->persist && $this->getTableName() != 'table') {
             $data = json_decode(request()->cookie($this->getPersistSessionKey()),true);
-            \Log::info('cookie-data' , $data);
+            if($this->debugIsEnabled())
+            {
+                \Log::info('cookie-data' , $data);
+            }
             $this->restorePersistStateFromArray($data);
         }
 
@@ -81,7 +86,10 @@ trait WithSavingState
         {
             $this->appliedFilters = $this->filterComponents = $tableState['appliedFilters'];
         }
-        \Log::info('$this->appliedFilters',$this->appliedFilters);
+        if($this->debugIsEnabled())
+        {
+            \Log::info('$this->appliedFilters',$this->appliedFilters);
+        }
         $this->setSortingPillsStatus($tableState['sortingPillsStatus']);
         $this->setSortingStatus($tableState['sortingStatus']);
         $this->setPaginationStatus($tableState['paginationStatus']);

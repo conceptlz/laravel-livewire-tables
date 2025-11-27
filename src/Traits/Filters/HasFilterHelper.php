@@ -50,9 +50,7 @@ trait HasFilterHelper
      */
     public function applyWhere(Builder $builder, string $column, string $condition, $value, string $boolean = 'and'): Builder
     {
-        \Log::info('colum' . $column);
-        \Log::info('condition : ' . $condition);
-        \Log::info('value' . $value);
+        
         // Special cases for empty/not empty conditions
         if ($condition === 'is_empty') {
             return $boolean === 'and'
@@ -77,11 +75,11 @@ trait HasFilterHelper
         // Get the correct SQL operator and formatted value for the condition
         $operator = $this->getOperatorForCondition($condition);
         $formattedValue = $this->formatValueForCondition($condition, $value);
-        \Log::info('operator:' . $operator);
-        \Log::info('formattedValue:' . $formattedValue);
+        // \Log::info('operator:' . $operator);
+        // \Log::info('formattedValue:' . $formattedValue);
         // Use formatted value for LIKE operators, otherwise use the original value
         $finalValue = in_array($operator, ['like', 'not like']) ? $formattedValue : $value;
-        \Log::info('finalValue:' . $finalValue);
+        // \Log::info('finalValue:' . $finalValue);
         // Apply the filter to the query builder with the specified boolean
         return $boolean === 'and'
             ? $builder->where($column, $operator, $finalValue)
