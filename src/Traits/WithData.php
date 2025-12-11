@@ -20,14 +20,14 @@ trait WithData
      * Retrieves the rows for the executed query
      */
     #[Computed]
-    public function getRows(): Collection|CursorPaginator|Paginator|LengthAwarePaginator
+    public function getRows($export = false): Collection|CursorPaginator|Paginator|LengthAwarePaginator
     {
 
         // Setup the Base Query
         $this->baseQuery();
 
         // Execute the Query
-        $executedQuery = $this->executeQuery();
+        $executedQuery = $this->executeQuery($export);
 
         // Get All Currently Paginated Items Primary Keys
         $this->paginationCurrentItems = $executedQuery->pluck($this->getPrimaryKey())->toArray() ?? [];
@@ -87,7 +87,7 @@ trait WithData
 
     }
 
-    protected function executeQuery(): Collection|CursorPaginator|Paginator|LengthAwarePaginator
+    protected function executeQuery($export = false): Collection|CursorPaginator|Paginator|LengthAwarePaginator
     {
         // Moved these from baseQuery to here to avoid pulling all fields when cloning baseQuery.
         $this->setBuilder($this->selectFields());
@@ -99,7 +99,7 @@ trait WithData
 
         }
 
-        if ($this->paginationIsEnabled()) {
+        if ($this->paginationIsEnabled() && !$export) {
             if ($this->isPaginationMethod('standard')) {
                 $paginatedResults = $this->getBuilder()->paginate($this->getPerPage() === -1 ? $this->getBuilder()->count() : $this->getPerPage(), ['*'], $this->getComputedPageName());
 
