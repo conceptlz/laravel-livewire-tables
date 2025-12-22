@@ -1,6 +1,6 @@
 @aware([ 'tableName','isTailwind','isBootstrap','isBootstrap4','isBootstrap5', 'localisationPath'])
 
-<th colspan="20" {{ $attributes->merge([
+<th colspan="{{ $this->getColspanCount }}" {{ $attributes->merge([
 
     'wire:loading.class' => $this->displayFilterPillsWhileLoading ? '' : 'invisible',
     'x-cloak',

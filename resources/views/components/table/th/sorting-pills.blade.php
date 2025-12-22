@@ -1,6 +1,6 @@
 @aware([ 'tableName','isTailwind','isBootstrap','isBootstrap4','isBootstrap5', 'localisationPath'])
 @if ($this->sortingPillsAreEnabled() && $this->hasSorts())
-    <th colspan="20" class="space-x-2 text-left" x-cloak x-show="!currentlyReorderingStatus">
+    <th colspan="{{ $this->getColspanCount }}" class="space-x-2 text-left" x-cloak x-show="!currentlyReorderingStatus">
         <small @class([
             'text-gray-700 dark:text-white' => $isTailwind,
             '' =>  $isBootstrap,
