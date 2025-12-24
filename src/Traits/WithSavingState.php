@@ -2,7 +2,7 @@
 
 namespace Rappasoft\LaravelLivewireTables\Traits;
 use Rappasoft\LaravelLivewireTables\Exports\DatatableExport;
-use Illuminate\Support\Facades\Cookie;
+use Rappasoft\LaravelLivewireTables\Models\TablePersistState;
 
 trait WithSavingState
 {
@@ -30,29 +30,31 @@ trait WithSavingState
         {
             return;
         }
-        // if (request()->cookie($this->getPersistSessionKey()) != null) {
-        //     addApilog('cookies-forget','');
-        //     Cookie::forget($this->getPersistSessionKey());
-        // }
-        //$cookie = cookie($this->getPersistSessionKey(), 'dark_mode', 60, '/', '.yourdomain.com', false, false);
-        $expires = time() + 60 * 60 * 24 * 365; // one year
-        Cookie::queue($this->getPersistSessionKey(), json_encode($this->getTablePersistStateToArray()), $expires);
+
+        TablePersistState::saveState(
+            $this->getPersistSessionKey(),
+            $this->getTablePersistStateToArray(),
+            365
+        );
     }
     private function getPersistCookieData(): void
     {
         if($this->debugIsEnabled())
         {
-            \Log::info('cookie ' . $this->getPersistSessionKey());
-        }
-        if (request()->cookie($this->getPersistSessionKey()) != null && $this->persist && $this->getTableName() != 'table') {
-            $data = json_decode(request()->cookie($this->getPersistSessionKey()),true);
-            if($this->debugIsEnabled())
-            {
-                \Log::info('cookie-data' , $data);
-            }
-            $this->restorePersistStateFromArray($data);
+            \Log::info('persist-key ' . $this->getPersistSessionKey());
         }
 
+        if ($this->persist && $this->getTableName() != 'table') {
+            $data = TablePersistState::getState($this->getPersistSessionKey());
+            
+            if($data !== null) {
+                if($this->debugIsEnabled())
+                {
+                    \Log::info('persist-data' , $data);
+                }
+                $this->restorePersistStateFromArray($data);
+            }
+        }
     }
     protected function getTablePersistStateToArray(): array
     {
@@ -103,5 +105,15 @@ trait WithSavingState
 
     }
 
-    
+    public function clearPersistState(): void
+    {
+        if ($this->getTableName() != 'table') {
+            TablePersistState::clearState($this->getTableName());
+        }
+    }
+
+    public static function cleanupExpiredStates(): int
+    {
+        return TablePersistState::cleanupExpired();
+    }
 }

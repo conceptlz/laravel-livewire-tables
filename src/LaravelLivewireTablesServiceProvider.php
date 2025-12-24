@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\ComponentHookRegistry;
 use Rappasoft\LaravelLivewireTables\Commands\MakeCommand;
+use Rappasoft\LaravelLivewireTables\Commands\CleanupExpiredPersistStates;
 use Rappasoft\LaravelLivewireTables\Features\AutoInjectRappasoftAssets;
 use Rappasoft\LaravelLivewireTables\Mechanisms\RappasoftFrontendAssets;
 
@@ -45,6 +46,8 @@ class LaravelLivewireTablesServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'livewire-tables');
         Blade::componentNamespace('Rappasoft\\LaravelLivewireTables\\View\\Components', 'livewire-tables');
 
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
         $this->consoleCommands();
 
         if (config('livewire-tables.inject_core_assets_enabled') || config('livewire-tables.inject_third_party_assets_enabled') || config('livewire-tables.enable_blade_directives')) {
@@ -78,8 +81,13 @@ class LaravelLivewireTablesServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/css' => public_path('vendor/rappasoft/livewire-tables/css'),
             ], 'livewire-tables-public');
 
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_table_persist_states_table.php' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_table_persist_states_table.php'),
+            ], 'livewire-tables-migrations');
+
             $this->commands([
                 MakeCommand::class,
+                CleanupExpiredPersistStates::class,
             ]);
         }
     }
