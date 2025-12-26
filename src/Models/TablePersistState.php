@@ -27,7 +27,6 @@ class TablePersistState extends Model
         $attributes = [
             'table_name' => $tableName,
             'user_id' => Auth::id(),
-            'session_id' => session()->getId(),
         ];
 
         static::updateOrCreate(

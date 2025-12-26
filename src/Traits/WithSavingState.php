@@ -30,7 +30,6 @@ trait WithSavingState
         {
             return;
         }
-
         TablePersistState::saveState(
             $this->getPersistSessionKey(),
             $this->getTablePersistStateToArray(),
@@ -44,7 +43,7 @@ trait WithSavingState
             \Log::info('persist-key ' . $this->getPersistSessionKey());
         }
 
-        if ($this->persist && $this->getTableName() != 'table') {
+        if ($this->persist && $this->getTableName() != 'table' ) {
             $data = TablePersistState::getState($this->getPersistSessionKey());
             
             if($data !== null) {
@@ -84,7 +83,7 @@ trait WithSavingState
         {
             $this->selectedColumns = $tableState['selectedColumns'];
         }
-        if(isset($tableState['appliedFilters']))
+        if(isset($tableState['appliedFilters']) && request()->has($this->getTableName().'-filters') != true)
         {
             $this->appliedFilters = $this->filterComponents = $tableState['appliedFilters'];
         }
