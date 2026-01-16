@@ -22,7 +22,7 @@
                 @if ($this->hasConfigurableAreaFor('toolbar-left-start'))
                     <div x-cloak x-show="!currentlyReorderingStatus" @class([
                         'mb-3 mb-md-0 input-group' => $isBootstrap,
-                        'flex rounded-md shadow-sm' => $isTailwind,
+                        'flex rounded-md w-full' => $isTailwind,
                     ])>
                         @include($this->getConfigurableAreaFor('toolbar-left-start'), $this->getParametersForConfigurableArea('toolbar-left-start'))
                     </div>
@@ -43,7 +43,7 @@
                  @if ($this->hasConfigurableAreaFor('toolbar-left-end'))
                     <div x-cloak x-show="!currentlyReorderingStatus" @class([
                         'mb-3 mb-md-0 input-group' => $isBootstrap,
-                        'flex rounded-md shadow-sm' => $isTailwind,
+                        'flex rounded-md w-full' => $isTailwind,
                     ])>
                         @include($this->getConfigurableAreaFor('toolbar-left-end'), $this->getParametersForConfigurableArea('toolbar-left-end'))
                     </div>
