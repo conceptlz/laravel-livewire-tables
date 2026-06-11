@@ -28,6 +28,7 @@ trait HasAllTraits
         HasCustomAttributes,
         WithCollapsingColumns,
         WithColumnSelect,
+        WithFixedColumnSelect,
         WithConfigurableAreas,
         WithCustomisations,
         WithDebugging,

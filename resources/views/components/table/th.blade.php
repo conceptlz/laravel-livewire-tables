@@ -10,9 +10,17 @@
     $direction = $column->hasField() ? $this->getSort($column->getColumnSelectName()) : $this->getSort($column->getSlug()) ?? null;
     $th_class = ($columnCount == $index) ? 'relative py-4 pl-3 pr-6 bg-zinc-100 shadow-[inset_1px_-1px_rgba(0,0,0,0.1)] shadow-zinc-200 min-w-min w-full' : 'text-left whitespace-nowrap';
     $applied_filter_keys = array_keys($appliedFilters);
+    $is_column_fixed = ($column->isFixed() || $this->isColumnFixed($column));
+    $isLastFixed = $this->isLastFixedColumn($column, $index);
+
+    $th_class .= "  data-[last-fixed]:after:w-8 data-[last-fixed]:after:absolute data-[last-fixed]:after:inset-y-0 data-[last-fixed]:after:right-0 data-[last-fixed]:after:translate-x-full data-[last-fixed]:after:pointer-events-none in-data-scrolled-right:data-[last-fixed]:after:inset-shadow-[8px_0px_8px_-8px_rgba(0,0,0,0.05)]";
 @endphp
 
-<th {{
+<th 
+    @if($is_column_fixed)  data-sticky="true" @endif
+    @if($isLastFixed) data-last-fixed="true" @endif
+    data-column-slug="{{ $column->getSlug() }}"
+    {{
     $attributes->merge($customThAttributes)
         ->class([
             $th_class => $isTailwind,
@@ -23,6 +31,7 @@
             'd-none' => $isBootstrap && $column->shouldCollapseAlways(),
             'd-none d-md-table-cell' => $isBootstrap && $column->shouldCollapseOnMobile(),
             'd-none d-lg-table-cell' => $isBootstrap && $column->shouldCollapseOnTablet(),
+            'data-[sticky]:sticky data-[sticky]:z-42' => $is_column_fixed
         ])
         ->except(['default', 'default-colors', 'default-styling'])
 }}>

@@ -60,6 +60,7 @@ trait WithSavingState
         return [
             'sorts' => $this->sorts,
             'selectedColumns' => $this->selectedColumns,
+            'selectedFixedColumns' => $this->selectedFixedColumns ?? [],
             'sortingPillsStatus' => $this->getSortingPillsStatus(),
             'sortingStatus' => $this->getSortingStatus(),
             'paginationStatus' => $this->getPaginationStatus(),
@@ -82,6 +83,13 @@ trait WithSavingState
         if(isset($tableState['selectedColumns']))
         {
             $this->selectedColumns = $tableState['selectedColumns'];
+        }
+        if(isset($tableState['selectedFixedColumns']))
+        {
+            $this->selectedFixedColumns = $tableState['selectedFixedColumns'];
+            // Mark that fixed columns were restored from persistence
+            // This prevents default columns from overriding user's explicit "clear all" choice
+            $this->fixedColumnsRestoredFromPersistence = true;
         }
         if(isset($tableState['appliedFilters']) && request()->has($this->getTableName().'-filters') != true)
         {

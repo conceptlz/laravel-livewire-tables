@@ -24,7 +24,7 @@
         </flux:popover>
     </flux:dropdown>
 </flux:tooltip>
-   
+<x-livewire-tables::tools.fixed-column-select />
 @elseif ($isBootstrap)
     <div
         @class([

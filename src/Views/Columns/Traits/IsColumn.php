@@ -30,7 +30,8 @@ trait IsColumn
         HasSecondaryHeader,
         HasTheme,
         HasVisibility,
-        HasExportable;
+        HasExportable,
+        IsFixedColumn;
 
     // What displays in the columns header
     protected string $title;

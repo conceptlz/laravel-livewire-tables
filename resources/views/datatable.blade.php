@@ -1,3 +1,22 @@
+@php
+    // Sort columns: pinned/fixed columns first, then others
+    $allColumns = $this->selectedVisibleColumns;
+    $fixedColumnSlugs = $this->selectedFixedColumns ?? [];
+    
+    $fixedColumns = [];
+    $otherColumns = [];
+    
+    foreach ($allColumns as $column) {
+        if (in_array($column->getSlug(), $fixedColumnSlugs)) {
+            $fixedColumns[] = $column;
+        } else {
+            $otherColumns[] = $column;
+        }
+    }
+    
+    $sortedColumns = array_merge($fixedColumns, $otherColumns);
+    $columnCount = count($sortedColumns) - 1;
+@endphp
 @php($tableName = $this->getTableName)
 @php($tableId = $this->getTableId)
 @php($primaryKey = $this->getPrimaryKey)
@@ -6,7 +25,6 @@
 @php($isBootstrap4 = $this->isBootstrap4)
 @php($isBootstrap5 = $this->isBootstrap5)
 @php($localisationPath = $this->getLocalisationPath)
-@php($columnCount = count($this->selectedVisibleColumns) - 1)
 @php($applied_filters = $this->getAppliedFiltersWithValues())
 <div>
     <x-livewire-tables::wrapper  :tableName="$tableName" :$primaryKey :$isTailwind :$isBootstrap :$isBootstrap4 :$isBootstrap5 :$localisationPath :columnCount="$columnCount" :appliedFilters="$applied_filters">
@@ -49,7 +67,7 @@
                             <x-livewire-tables::table.th.collapsed-columns />
                         @endif
 
-                        @tableloop($this->selectedVisibleColumns as $index => $column)
+                        @tableloop($sortedColumns as $index => $column)
                             <x-livewire-tables::table.th wire:key="{{ $tableName.'-table-head-'.$index }}" :$column :$index />
                         @endtableloop
                     </x-slot>
@@ -65,7 +83,6 @@
                         @php($getCurrentlyReorderingStatus = $this->getCurrentlyReorderingStatus)
                         @php($showBulkActionsSections = $this->showBulkActionsSections)
                         @php($showCollapsingColumnSections = $this->showCollapsingColumnSections)
-                        @php($selectedVisibleColumns = $this->selectedVisibleColumns)
 
                         @tableloop ($currentRows as $rowIndex => $row)
                             <x-livewire-tables::table.tr wire:key="{{ $tableName }}-row-wrap-{{ $row->{$primaryKey} }}" :$row :$rowIndex>
@@ -79,7 +96,7 @@
                                     <x-livewire-tables::table.td.collapsed-columns wire:key="{{ $tableName }}-row-collapsed-{{ $row->{$primaryKey} }}" :$rowIndex />
                                 @endif
 
-                                @tableloop($selectedVisibleColumns as $colIndex => $column)
+                                @tableloop($sortedColumns as $colIndex => $column)
                                     <x-livewire-tables::table.td wire:key="{{ $tableName . '-' . $row->{$primaryKey} . '-datatable-td-' . $column->getSlug() }}"  :$column :$colIndex>
                                         @if($column->isHtml())
                                             {!! $column->setIndexes($rowIndex, $colIndex)->renderContents($row) !!}

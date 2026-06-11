@@ -12,18 +12,19 @@
 @if ($isTailwind)
     <div
         wire:key="{{ $tableName }}-twrap"
-        {{ $attributes->merge($customAttributes['wrapper'])
-            ->class([
-                'mt-6 flow-root relative' => $customAttributes['wrapper']['default'] ?? true
-            ])
-            ->except(['default','default-styling','default-colors']) }}
+        class="mt-6 flow-root relative"
     >
-    <div class="overflow-x-auto shadow-md ring-1 ring-zinc-200 ring-opacity-5 sm:rounded-lg">
-            <div class="inline-block overflow-hidden min-w-full align-middle ">
+    <div {{ $attributes->merge($customAttributes['wrapper'])
+            ->class([
+                'overflow-x-auto overflow-y-auto shadow-md ring-1 ring-zinc-200 ring-opacity-5 sm:rounded-lg h-[calc(100vh-300px)]' => $customAttributes['wrapper']['default'] ?? true
+            ])
+            ->except(['default','default-styling','default-colors']) }} >
+            <div class="inline-block min-w-full align-middle">
                 <table
+                    x-ref="dataTable"
                     wire:key="{{ $tableName }}-table"
                     {{ $attributes->merge($customAttributes['table'])
-                        ->class(['min-w-full block overflow-auto h-[calc(100vh-300px)]' => $customAttributes['table']['default'] ?? true])
+                        ->class(['min-w-full table-auto' => $customAttributes['table']['default'] ?? true])
                         ->except(['default','default-styling','default-colors']) }}
 
                 >
@@ -34,7 +35,7 @@
                             ])
                             ->except(['default','default-styling','default-colors']) }}
                     >
-                        <tr class="[&>th]:sticky [&>th]:top-0 [&>th]:z-20 [&>th]:bg-zinc-100 [&>th]:ps-4 [&>th]:pe-2 [&>th]:shadow-[inset_1px_-1px_rgba(0,0,0,0.9)] [&>th]:shadow-zinc-200 [&>th]:text-zinc-950 [&>th]:py-2">
+                        <tr class="bg-zinc-100 [&>th]:sticky [&>th]:top-0 [&>th]:z-20 [&>th]:bg-zinc-100 [&>th]:ps-4 [&>th]:pe-2 [&>th]:shadow-[inset_1px_-1px_rgba(0,0,0,0.9)] [&>th]:shadow-zinc-200 [&>th]:text-zinc-950 [&>th]:py-2">
                             {{ $thead }}
                         </tr>
                         @if($this->showSortPillsSection)

@@ -332,6 +332,146 @@ document.addEventListener('alpine:init', () => {
                 this.shouldBeDisplayed = false; 
             } 
         },
+        calculateFixedColumnWidths() {
+            const table = this.$refs.dataTable;
+            if (!table) {
+                console.log('Fixed columns: dataTable ref not found');
+                return;
+            }
+            let leftOffset = 0;
+
+            const headerCells = table.querySelectorAll('thead tr:first-child th[data-sticky]');
+            
+            const stickyColumns = [];
+
+            // READ PHASE
+            headerCells.forEach((th) => {
+
+                 const slug = th.dataset.columnSlug;
+                if (!slug) return;
+                const width = th.offsetWidth;
+
+                stickyColumns[slug] = {
+                    left: leftOffset,
+                    width: width
+                };
+                th.style.left = `${leftOffset}px`;
+                leftOffset += th.offsetWidth;
+            });
+        
+
+            table.querySelectorAll('tbody td[data-sticky]').forEach((td) => {
+                const slug = td.dataset.columnSlug;
+                if (!slug || !stickyColumns[slug]) return;
+                td.style.left = `${stickyColumns[slug].left}px`;
+                td.style.setProperty('z-index', '35', 'important');
+
+            });
+            
+            // Update shadow after calculating widths
+            this.updateFixedColumnShadow();
+        },
+        updateFixedColumnShadow() {
+            const table = this.$refs.dataTable;
+            if (!table) return;
+            
+            const scrollContainer = table.closest('.overflow-x-auto');
+            if (!scrollContainer) return;
+
+            
+            const isScrolled = scrollContainer.scrollLeft > 0;
+            const lastFixedCells = table.querySelectorAll('[data-last-fixed="true"]');
+            if(isScrolled)
+            {
+                table.setAttribute('data-scrolled-right', 'true');
+            }else{
+                table.removeAttribute('data-scrolled-right');
+            }
+            // lastFixedCells.forEach(cell => {
+            //     cell.style.boxShadow = isScrolled 
+            //         ? 'inset 8px 0 8px -8px rgba(0,0,0,0.05)' 
+            //         : 'none';
+            // });
+        },
+        setupFixedColumnWidths() {
+            // Calculate widths after a slight delay to ensure DOM is ready
+            // Set up scroll listener ONCE
+            this.setupScrollListener();
+            
+            // Initial calculation
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    this.calculateFixedColumnWidths();
+                });
+            }, 100);
+            
+            // Recalculate on window resize with debounce
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    this.calculateFixedColumnWidths();
+                }, 250);
+            });
+            
+            // Listen for fixed column changes via Livewire event
+            // this.listeners.push(
+            //     Livewire.on('fixed-columns-updated', () => {
+            //         setTimeout(() => {
+            //             this.$nextTick(() => {
+            //                 this.calculateFixedColumnWidths();
+            //             });
+            //         }, 100);
+            //     })
+            // );
+            // this.listeners.push(
+            //     Livewire.on('refreshDatatable', () => {
+            //         console.log('refreshDatatable');
+            //         setTimeout(() => {
+            //             this.$nextTick(() => {
+            //                 this.calculateFixedColumnWidths();
+            //             });
+            //         }, 100);
+            //     })
+            // );
+            
+            // Also recalculate after any Livewire update
+            this.listeners.push(
+                
+                Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => { 
+                    // Equivalent of 'message.sent'
+                    succeed(({ snapshot, effect }) => {
+                        // Equivalent of 'message.received'
+                
+                        queueMicrotask(() => {
+                            setTimeout(() => {
+                                this.calculateFixedColumnWidths();
+                            }, 100);
+                        })
+                    })
+                
+                    fail(() => {
+                        // Equivalent of 'message.failed'
+                    })
+                })
+            );
+        },
+        setupScrollListener() {
+            const table = this.$refs.dataTable;
+            if (!table) return;
+            
+            const scrollContainer = table.closest('.overflow-x-auto');
+            if (!scrollContainer) return;
+            
+            // Attach scroll listener ONCE - it will call updateFixedColumnShadow
+            scrollContainer.addEventListener('scroll', () => {
+                this.updateFixedColumnShadow();
+            });
+        },
+        init() {
+            // Initialize fixed column width calculation
+            this.setupFixedColumnWidths();
+        },
         destroy() {
             this.listeners.forEach((listener) => {
                 listener();

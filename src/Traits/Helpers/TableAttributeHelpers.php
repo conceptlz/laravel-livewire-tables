@@ -143,4 +143,68 @@ trait TableAttributeHelpers
     {
         return new ComponentAttributeBag($this->getTopLevelAttributesArray());
     }
+
+    public function getFixedColumnStyles(Column $column, int $index, bool $isHeader = false): string
+    {
+        // Check if using fixed column select feature
+        $isFixedBySelect = method_exists($this, 'isColumnFixed') && $this->isColumnFixed($column);
+        $isFixedManual = $column->isFixed();
+        if (!$isFixedBySelect && !$isFixedManual) {
+            return '';
+        }
+        
+        // Get position for z-index calculation
+        if ($isFixedBySelect && method_exists($this, 'getFixedColumnPosition')) {
+            $position = $this->getFixedColumnPosition($column);
+            $zIndex = 40 + (3 - $position);
+        } else {
+            $zIndex = 40 + (3 - $column->getFixedPosition());
+        }
+        
+        // Use appropriate background color based on whether it's header or body
+        $bgColor = $isHeader ? 'rgb(244, 244, 245)' : 'rgb(255, 255, 255)'; // zinc-100 for header, white for body
+        
+        return "position: sticky !important;  z-index: 42 !important; background-color: {$bgColor} !important;";
+    }
+
+    protected function isLastFixedColumn(Column $column, int $currentIndex): bool
+    {
+        // Check both manual and select-based fixed columns
+        $isFixedBySelect = method_exists($this, 'isColumnFixed') && $this->isColumnFixed($column);
+        $isFixedManual = $column->isFixed();
+        
+        if (!$isFixedBySelect && !$isFixedManual) {
+            return false;
+        }
+        
+        $columns = $this->selectedVisibleColumns;
+        
+        // Get current position
+        if ($isFixedBySelect && method_exists($this, 'getFixedColumnPosition')) {
+            $currentPosition = $this->getFixedColumnPosition($column);
+        } else {
+            $currentPosition = $column->getFixedPosition();
+        }
+        
+        // Check if there's any fixed column with a higher position number
+        foreach ($columns as $col) {
+            $colIsFixedBySelect = method_exists($this, 'isColumnFixed') && $this->isColumnFixed($col);
+            $colIsFixedManual = $col->isFixed();
+            
+            if ($colIsFixedBySelect || $colIsFixedManual) {
+                if ($colIsFixedBySelect && method_exists($this, 'getFixedColumnPosition')) {
+                    $colPosition = $this->getFixedColumnPosition($col);
+                } else {
+                    $colPosition = $col->getFixedPosition();
+                }
+                
+                if ($colPosition > $currentPosition) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
 }
