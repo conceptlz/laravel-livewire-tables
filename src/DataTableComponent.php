@@ -24,6 +24,14 @@ abstract class DataTableComponent extends Component
     }
 
     /**
+     * Refreshes the datatable when a company created/updated/deleted event is received.
+     */
+    public function refreshDatatable(): void
+    {
+        $this->resetPage();
+    }
+
+    /**
      * Runs on every request, after the component is mounted or hydrated, but before any update methods are called
      */
     public function booted(): void {
